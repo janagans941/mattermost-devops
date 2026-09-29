@@ -28,7 +28,7 @@ services:
       - postgres
 
     ports:
-      - "8065:8065"
+      - "127.0.0.1:8065:8065"
 
     environment:
       MM_SQLSETTINGS_DRIVERNAME: postgres
@@ -56,7 +56,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "9091:9090"
+      - "127.0.0.1:9091:9090"
 
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -79,7 +79,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "9093:9093"
+      - "127.0.0.1:9093:9093"
 
     volumes:
       - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
@@ -100,7 +100,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "12345:12345"
+      - "127.0.0.1:12345:12345"
 
     volumes:
       - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
@@ -124,7 +124,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "3100:3100"
+      - "127.0.0.1:3100:3100"
 
     volumes:
       - ./monitoring/loki/loki-config.yml:/etc/loki/config.yml:ro
@@ -142,7 +142,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
 
     volumes:
       - /:/rootfs:ro
