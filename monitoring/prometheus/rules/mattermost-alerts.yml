@@ -1,0 +1,30 @@
+groups:
+  - name: mattermost-infrastructure
+    rules:
+
+      - alert: MattermostContainerDown
+        expr: absent(container_last_seen{name="mattermost"})
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Mattermost container is down"
+          description: "The Mattermost container has not been detected by cAdvisor for more than 1 minute."
+
+      - alert: HostHighCPU
+        expr: 100 * (1 - avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Host CPU usage is high"
+          description: "Host CPU usage has been above 80% for more than 5 minutes."
+
+      - alert: HostHighMemory
+        expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Host memory usage is high"
+          description: "Host memory usage has been above 80% for more than 5 minutes."

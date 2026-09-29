@@ -1,0 +1,30 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "mattermost-alerts"
+
+  group_by:
+    - alertname
+    - severity
+
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: "mattermost-alerts"
+
+    mattermost_configs:
+      - webhook_url_file: "/etc/alertmanager/mattermost-webhook-url"
+        channel: "alerts"
+        username: "Alertmanager"
+        title: "🚨 Prometheus Alert"
+        text: |
+          {{ range .Alerts }}
+          **Alert:** {{ .Labels.alertname }}
+          **Severity:** {{ .Labels.severity }}
+          **Status:** {{ .Status }}
+          **Summary:** {{ .Annotations.summary }}
+          **Description:** {{ .Annotations.description }}
+          {{ end }}

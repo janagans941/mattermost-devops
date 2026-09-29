@@ -1,0 +1,27 @@
+# Mattermost runtime data
+bleve-indexes/
+client-plugins/
+config/
+data/
+logs/
+plugins/
+
+# Secrets
+monitoring/alertmanager/mattermost-webhook-url
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local/runtime files
+*.log
+*.pid
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+!monitoring/alertmanager/mattermost-webhook-url.example

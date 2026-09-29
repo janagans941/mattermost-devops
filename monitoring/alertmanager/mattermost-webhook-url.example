@@ -1,0 +1,3 @@
+# Replace this value with your actual Mattermost incoming webhook URL.
+# Do not commit the real webhook URL.
+https://localhost/hooks/REPLACE_WITH_WEBHOOK_ID
