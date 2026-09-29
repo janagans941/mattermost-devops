@@ -25,3 +25,6 @@ Thumbs.db
 .idea/
 
 !monitoring/alertmanager/mattermost-webhook-url.example
+
+# Mattermost backup archives and restore points
+backups/
