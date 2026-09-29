@@ -2,9 +2,70 @@
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
+# The wrapper dispatches to child scripts that manage their own EXIT traps.
+trap - EXIT
+
 require_command docker
 
 cd "$PROJECT_DIR"
+
+run_health() {
+    ./scripts/health-check.sh
+}
+
+run_docker_health() {
+    ./scripts/docker-health.sh
+}
+
+run_diagnostics() {
+    ./scripts/diagnose-services.sh
+}
+
+run_backup() {
+    ./scripts/backup-mattermost.sh
+}
+
+show_status() {
+    log_info "Mattermost Docker service status:"
+    docker compose ps
+}
+
+run_command() {
+    local command="$1"
+
+    case "$command" in
+        health)
+            run_health
+            ;;
+        docker)
+            run_docker_health
+            ;;
+        diagnose)
+            run_diagnostics
+            ;;
+        backup)
+            run_backup
+            ;;
+        status)
+            show_status
+            ;;
+        "")
+            return 1
+            ;;
+        *)
+            log_error "Unknown command: $command"
+            echo
+            echo "Usage:"
+            echo "  $0"
+            echo "  $0 health"
+            echo "  $0 docker"
+            echo "  $0 diagnose"
+            echo "  $0 backup"
+            echo "  $0 status"
+            return 1
+            ;;
+    esac
+}
 
 show_menu() {
     echo
@@ -21,10 +82,10 @@ show_menu() {
     echo
 }
 
-show_status() {
-    log_info "Mattermost Docker service status:"
-    docker compose ps
-}
+if [[ "$#" -gt 0 ]]; then
+    run_command "$1"
+    exit $?
+fi
 
 while true; do
     show_menu
@@ -33,16 +94,16 @@ while true; do
 
     case "$choice" in
         1)
-            ./scripts/health-check.sh
+            run_health
             ;;
         2)
-            ./scripts/docker-health.sh
+            run_docker_health
             ;;
         3)
-            ./scripts/diagnose-services.sh
+            run_diagnostics
             ;;
         4)
-            ./scripts/backup-mattermost.sh
+            run_backup
             ;;
         5)
             show_status
