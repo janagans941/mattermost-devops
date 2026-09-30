@@ -25,6 +25,10 @@ run_backup() {
     ./scripts/backup-mattermost.sh
 }
 
+run_summary() {
+    ./scripts/system-summary.sh
+}
+
 show_status() {
     log_info "Mattermost Docker service status:"
     docker compose ps
@@ -46,6 +50,9 @@ run_command() {
         backup)
             run_backup
             ;;
+        summary)
+            run_summary
+            ;;
         status)
             show_status
             ;;
@@ -61,6 +68,7 @@ run_command() {
             echo "  $0 docker"
             echo "  $0 diagnose"
             echo "  $0 backup"
+            echo "  $0 summary"
             echo "  $0 status"
             return 1
             ;;
@@ -77,8 +85,9 @@ show_menu() {
     echo "2. Docker health"
     echo "3. Generate diagnostics"
     echo "4. Create backup"
-    echo "5. Show service status"
-    echo "6. Exit"
+    echo "5. System summary"
+    echo "6. Show service status"
+    echo "7. Exit"
     echo
 }
 
@@ -90,7 +99,7 @@ fi
 while true; do
     show_menu
 
-    read -r -p "Select an option [1-6]: " choice
+    read -r -p "Select an option [1-7]: " choice
 
     case "$choice" in
         1)
@@ -106,14 +115,17 @@ while true; do
             run_backup
             ;;
         5)
-            show_status
+            run_summary
             ;;
         6)
+            show_status
+            ;;
+        7)
             log_info "Exiting Mattermost administration."
             exit 0
             ;;
         *)
-            log_warn "Invalid option. Please select 1-6."
+            log_warn "Invalid option. Please select 1-7."
             ;;
     esac
 done
