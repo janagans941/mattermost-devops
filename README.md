@@ -59,6 +59,8 @@ The project was built to practice and demonstrate practical DevOps and SRE opera
 
 ## 🏗️ Architecture
 
+![Mattermost DevOps Architecture](docs/architecture/mattermost-devops-architecture.png)
+
 ```text
 Browser
    │ HTTPS / WSS
