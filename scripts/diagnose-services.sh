@@ -82,4 +82,36 @@ log_success "$REPORT_FILE"
 log_info "Report size:"
 du -h "$REPORT_FILE"
 
+MAX_REPORTS=10
+
+REPORT_COUNT="$(
+    find "$REPORT_DIR" \
+        -maxdepth 1 \
+        -type f \
+        -name 'diagnostic_*.log' \
+        | wc -l
+)"
+
+if [[ "$REPORT_COUNT" -gt "$MAX_REPORTS" ]]; then
+    REPORTS_TO_DELETE=$((REPORT_COUNT - MAX_REPORTS))
+
+    log_info "Diagnostic report retention limit: $MAX_REPORTS"
+    log_info "Removing $REPORTS_TO_DELETE old diagnostic report(s)..."
+
+    find "$REPORT_DIR" \
+        -maxdepth 1 \
+        -type f \
+        -name 'diagnostic_*.log' \
+        -printf '%T@ %p\n' \
+        | sort -n \
+        | head -n "$REPORTS_TO_DELETE" \
+        | cut -d' ' -f2- \
+        | while IFS= read -r report; do
+            rm -f -- "$report"
+            log_info "Removed old diagnostic report: $report"
+        done
+else
+    log_info "Diagnostic report retention: $REPORT_COUNT/$MAX_REPORTS reports"
+fi
+
 exit 0
