@@ -8,7 +8,7 @@ require_command free
 require_command uptime
 require_command ss
 
-cd "$PROJECT_DIR"
+cd "$PROJECT_DIR" || exit 1
 
 log_info "Generating Mattermost system summary..."
 

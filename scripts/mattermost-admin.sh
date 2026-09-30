@@ -7,7 +7,7 @@ trap - EXIT
 
 require_command docker
 
-cd "$PROJECT_DIR"
+cd "$PROJECT_DIR" || exit 1
 
 run_health() {
     ./scripts/health-check.sh

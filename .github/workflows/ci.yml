@@ -1,0 +1,49 @@
+name: Mattermost CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Validate Mattermost project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Validate Bash syntax
+        run: |
+          set -e
+
+          for script in scripts/*.sh scripts/lib/*.sh; do
+            echo "Checking Bash syntax: $script"
+            bash -n "$script"
+          done
+
+      - name: Run ShellCheck
+        run: |
+          set -e
+
+          for script in scripts/*.sh scripts/lib/*.sh; do
+            echo "Running ShellCheck: $script"
+            shellcheck -x -P scripts "$script"
+          done
+
+      - name: Check Git diff
+        run: |
+          git diff --check
+
+      - name: Validate Docker Compose
+        run: |
+          docker compose config -q

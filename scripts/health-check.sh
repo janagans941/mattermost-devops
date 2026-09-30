@@ -5,7 +5,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 require_command docker
 require_command curl
 
-cd "$PROJECT_DIR"
+cd "$PROJECT_DIR" || exit 1
 
 log_info "Starting Mattermost health check..."
 
@@ -30,9 +30,12 @@ check_container() {
 check_http() {
     local name="$1"
     local url="$2"
-    local curl_options="$3"
+    local curl_options=()
+    if [[ -n "${3:-}" ]]; then
+        read -r -a curl_options <<< "$3"
+    fi
 
-    if curl $curl_options --silent --show-error --fail "$url" >/dev/null; then
+    if curl "${curl_options[@]}" --silent --show-error --fail "$url" >/dev/null; then
         log_success "$name is responding: $url"
     else
         log_error "$name is not responding: $url"

@@ -4,7 +4,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/common.sh"
 
 require_command docker
 
-cd "$PROJECT_DIR"
+cd "$PROJECT_DIR" || exit 1
 
 log_info "Starting Docker service health check..."
 
