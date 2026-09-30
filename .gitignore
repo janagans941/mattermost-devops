@@ -28,3 +28,7 @@ Thumbs.db
 
 # Mattermost backup archives and restore points
 backups/
+
+# Historical configuration snapshots
+*.before-*
+*.backup
